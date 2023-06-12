@@ -7,7 +7,7 @@ interface IInputProps {
   styleClass: string;
 }
 
-export const InputHomePage = ({ labelName, type, placeholder, styleClass }: IInputProps) => {
+export const Input = ({ labelName, type, placeholder, styleClass }: IInputProps) => {
   return (
     <div className={styles.inner}>
       <label
