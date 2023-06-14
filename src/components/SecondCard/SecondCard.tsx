@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,14 +9,39 @@ import { ProgressBar } from '../ProgressBar/ProgressBar';
 import styles from './SecondCard.module.scss';
 
 const schema = yup.object({
-  advantage: yup.string().required('Введите Advantage'),
+  advantage: yup
+    .array()
+    .of(yup.string().required('Введите хотя бы одно значение в поле ввода'))
+    .required('Введите хотя бы одно значение в поле ввода'),
+  checkbox: yup.array().of(yup.number()).required('Выберите хотя бы один пункт из чекбокса'),
+  radio: yup.number().required('Выберите значение для радио'),
 });
 
 interface IFormData {
-  advantages: string[];
+  advantage: string[];
+  checkbox: number[];
+  radio: number;
 }
 
 export const SecondCard = () => {
+  const [inputs, setInputs] = useState(['']);
+
+  const handleInputChange = (index: number, value: string) => {
+    const newInputs = [...inputs];
+    newInputs[index] = value;
+    setInputs(newInputs);
+  };
+
+  const handleAddInput = () => {
+    setInputs([...inputs, '']);
+  };
+
+  const handleRemoveInput = (index: number) => {
+    const newInputs = [...inputs];
+    newInputs.splice(index, 1);
+    setInputs(newInputs);
+  };
+
   const {
     register,
     handleSubmit,
@@ -37,30 +63,39 @@ export const SecondCard = () => {
             <label className={styles.label}>
               Advantages
               <div className={styles.advantages}>
-                <input
-                  className={styles.input}
-                  type="text"
-                  placeholder="Placeholder"
-                  {...register('advantage', {
-                    required: true,
-                  })}
-                />
-                <button
-                  className={styles.buttonDelete}
-                  type="button"
-                >
-                  <img
-                    src="/delete.svg"
-                    alt="delete-icon"
-                  />
-                </button>
+                {inputs.map((value, index) => (
+                  <div
+                    className={styles.advantage}
+                    key={index}
+                  >
+                    <input
+                      className={styles.input}
+                      type="text"
+                      placeholder="Placeholder"
+                      {...register(`advantage.${index}`, {
+                        required: true,
+                      })}
+                      value={value}
+                      onChange={(e) => handleInputChange(index, e.target.value)}
+                    />
+                    <button
+                      className={styles.buttonDelete}
+                      onClick={() => handleRemoveInput(index)}
+                    >
+                      <img
+                        src="/delete.svg"
+                        alt="delete-icon"
+                      />
+                    </button>
+                  </div>
+                ))}
               </div>
               {errors.advantage?.message}
             </label>
 
             <button
               className={`${styles.buttonBack} ${styles.buttonAdd}`}
-              type="button"
+              onClick={handleAddInput}
             />
 
             <div className={styles.checkboxGroup}>
@@ -68,24 +103,34 @@ export const SecondCard = () => {
               <label>
                 <input
                   type="checkbox"
-                  value="1"
+                  value={1}
+                  {...register('checkbox', {
+                    required: true,
+                  })}
                 />
                 <span className={styles.checkboxImage}></span>1
               </label>
               <label>
                 <input
                   type="checkbox"
-                  value="2"
+                  value={2}
+                  {...register('checkbox', {
+                    required: true,
+                  })}
                 />
                 <span className={styles.checkboxImage}></span>2
               </label>
               <label>
                 <input
                   type="checkbox"
-                  value="3"
+                  value={3}
+                  {...register('checkbox', {
+                    required: true,
+                  })}
                 />
                 <span className={styles.checkboxImage}></span>3
               </label>
+              {errors.checkbox?.message}
             </div>
 
             <div className={styles.radioGroup}>
@@ -93,27 +138,34 @@ export const SecondCard = () => {
               <label>
                 <input
                   type="radio"
-                  name="radio"
-                  value="1"
+                  value={1}
+                  {...register('radio', {
+                    required: true,
+                  })}
                 />
                 <span className={styles.radioImage}></span>1
               </label>
               <label>
                 <input
                   type="radio"
-                  name="radio"
-                  value="2"
+                  value={2}
+                  {...register('radio', {
+                    required: true,
+                  })}
                 />
                 <span className={styles.radioImage}></span>2
               </label>
               <label>
                 <input
                   type="radio"
-                  name="radio"
-                  value="3"
+                  value={3}
+                  {...register('radio', {
+                    required: true,
+                  })}
                 />
                 <span className={styles.radioImage}></span>3
               </label>
+              {errors.radio?.message}
             </div>
 
             <button
