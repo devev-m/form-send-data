@@ -1,0 +1,67 @@
+.inner {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.modal {
+   display: flex;
+   flex-direction: column;
+   width: 900px;
+   min-height: 820px;
+   background-color: #fff;
+   padding: 62px 110px 0px;
+}
+
+.formWrapper {
+   position: relative;
+}
+
+.form {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   font-size: 14px;
+   line-height: 20px;
+}
+
+.label {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   padding-top: 24px;
+}
+
+.input {
+   border: 1px solid rgba(0, 0, 0, 0.16);
+   border-radius: 4px;
+   padding: 12px;
+   width: 400px;
+   margin-top: 8px;
+}
+
+.buttonNext {
+   font-size: 14px;
+   line-height: 20px;
+   color: #FFFFFF;
+   padding: 12px 16px;
+   background-color: #5558FA;
+   border-radius: 4px;
+   border: none;
+   margin-top: 48px;
+   align-self: flex-end;
+}
+
+.buttonBack {
+   font-size: 14px;
+   line-height: 20px;
+   color: #5558FA;
+   padding: 11px 16px;
+   border: 2px solid #5558FA;
+   border-radius: 4px;
+   background-color: #fff;
+   align-self: flex-start;
+   position: absolute;
+   bottom: 0;
+   left: 0;
+}
