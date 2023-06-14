@@ -1,3 +1,5 @@
+import { SecondCard } from '../components/SecondCard/SecondCard';
+
 export const StepTwo = () => {
-  return <div>StepTwo</div>;
+  return <SecondCard />;
 };

@@ -7,8 +7,9 @@
 .modal {
    display: flex;
    flex-direction: column;
-   width: 900px;
-   min-height: 820px;
+   flex: 1;
+   max-width: 900px;
+   min-height: 800px;
    background-color: #fff;
    padding: 62px 110px 0px;
 }
