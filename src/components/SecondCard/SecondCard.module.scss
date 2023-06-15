@@ -1,10 +1,10 @@
-.inner {
+.secondCard {
    display: flex;
    justify-content: center;
    align-items: center;
 }
 
-.modal {
+.inner {
    display: flex;
    flex-direction: column;
    flex: 1;
@@ -16,19 +16,12 @@
 
 .formWrapper {
    position: relative;
-}
 
-.form {
-   display: flex;
-   flex-direction: column;
-   align-items: flex-start;
-   font-size: 14px;
-   line-height: 20px;
-
-   .label {
+   .form {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      font-size: 14px;
+      line-height: 20px;
       padding-top: 24px;
 
       .advantages {
@@ -52,9 +45,15 @@
             padding: 12px;
             width: 300px;
          }
+
+         .error {
+            align-self: center;
+            margin-left: 10px;
+         }
       }
    }
 }
+
 
 .buttonNext {
    font-size: 14px;

@@ -1,3 +1,5 @@
+import { ThirdCard } from '../components/ThirdCard/ThirdCard';
+
 export const StepThree = () => {
-  return <div>StepThree</div>;
+  return <ThirdCard />;
 };

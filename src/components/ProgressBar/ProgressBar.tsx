@@ -6,9 +6,9 @@ interface IProgressBarProps {
 
 export const ProgressBar = ({ currentStep }: IProgressBarProps) => {
   return (
-    <>
+    <div className={styles.progressBar}>
       <div
-        className={`${styles.progressBar} ${
+        className={`${styles.progress} ${
           currentStep === 2 ? styles.half : currentStep === 3 ? styles.full : ''
         }`}
       >
@@ -73,6 +73,6 @@ export const ProgressBar = ({ currentStep }: IProgressBarProps) => {
         <span className={`${currentStep >= 2 ? styles.activeSpan : ''}`}>2</span>
         <span className={`${currentStep >= 3 ? styles.activeSpan : ''}`}>3</span>
       </div>
-    </>
+    </div>
   );
 };

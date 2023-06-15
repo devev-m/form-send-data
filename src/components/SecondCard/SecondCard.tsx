@@ -8,20 +8,16 @@ import { ProgressBar } from '../ProgressBar/ProgressBar';
 
 import styles from './SecondCard.module.scss';
 
-const schema = yup.object({
-  advantage: yup
+const schema = yup.object().shape({
+  advantages: yup
     .array()
-    .of(yup.string().required('Введите хотя бы одно значение в поле ввода'))
+    .of(yup.string().required('Введите значение в поле ввода'))
     .required('Введите хотя бы одно значение в поле ввода'),
   checkbox: yup.array().of(yup.number()).required('Выберите хотя бы один пункт из чекбокса'),
   radio: yup.number().required('Выберите значение для радио'),
 });
 
-interface IFormData {
-  advantage: string[];
-  checkbox: number[];
-  radio: number;
-}
+type FormData = yup.InferType<typeof schema>;
 
 export const SecondCard = () => {
   const [inputs, setInputs] = useState(['']);
@@ -46,13 +42,13 @@ export const SecondCard = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormData>({ resolver: yupResolver(schema) });
+  } = useForm<FormData>({ resolver: yupResolver(schema) });
 
-  const onSubmit: SubmitHandler<IFormData> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
 
   return (
-    <div className={styles.inner}>
-      <div className={styles.modal}>
+    <div className={styles.secondCard}>
+      <div className={styles.inner}>
         <ProgressBar currentStep={2} />
 
         <div className={styles.formWrapper}>
@@ -60,44 +56,40 @@ export const SecondCard = () => {
             className={styles.form}
             onSubmit={handleSubmit(onSubmit)}
           >
-            <label className={styles.label}>
-              Advantages
-              <div className={styles.advantages}>
-                {inputs.map((value, index) => (
-                  <div
-                    className={styles.advantage}
-                    key={index}
+            Advantages
+            <div className={styles.advantages}>
+              {inputs.map((value, index) => (
+                <div
+                  className={styles.advantage}
+                  key={index}
+                >
+                  <input
+                    className={styles.input}
+                    type="text"
+                    placeholder="Placeholder"
+                    {...register(`advantages.${index}`, {
+                      required: true,
+                    })}
+                    value={value}
+                    onChange={(e) => handleInputChange(index, e.target.value)}
+                  />
+                  <button
+                    className={styles.buttonDelete}
+                    onClick={() => handleRemoveInput(index)}
                   >
-                    <input
-                      className={styles.input}
-                      type="text"
-                      placeholder="Placeholder"
-                      {...register(`advantage.${index}`, {
-                        required: true,
-                      })}
-                      value={value}
-                      onChange={(e) => handleInputChange(index, e.target.value)}
+                    <img
+                      src="/delete.svg"
+                      alt="delete-icon"
                     />
-                    <button
-                      className={styles.buttonDelete}
-                      onClick={() => handleRemoveInput(index)}
-                    >
-                      <img
-                        src="/delete.svg"
-                        alt="delete-icon"
-                      />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              {errors.advantage?.message}
-            </label>
-
+                  </button>
+                </div>
+              ))}
+              {errors.advantages?.message}
+            </div>
             <button
               className={`${styles.buttonBack} ${styles.buttonAdd}`}
               onClick={handleAddInput}
             />
-
             <div className={styles.checkboxGroup}>
               Checkbox group
               <label>
@@ -132,7 +124,6 @@ export const SecondCard = () => {
               </label>
               {errors.checkbox?.message}
             </div>
-
             <div className={styles.radioGroup}>
               Radio group
               <label>
@@ -167,7 +158,6 @@ export const SecondCard = () => {
               </label>
               {errors.radio?.message}
             </div>
-
             <button
               className={styles.buttonNext}
               type="submit"
