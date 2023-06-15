@@ -5,6 +5,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { ProgressBar } from '../ProgressBar/ProgressBar';
 
 import styles from './ThirdCard.module.scss';
+import { Modal } from '../Modal/Modal';
 
 interface IFormInput {
   about: string;
@@ -12,6 +13,7 @@ interface IFormInput {
 
 export const ThirdCard = () => {
   const [text, setText] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(true);
 
   const maxLength = 200;
 
@@ -27,8 +29,19 @@ export const ThirdCard = () => {
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
 
+  const closeModal = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsModalVisible(false);
+  };
+
   return (
     <div className={styles.thirdCard}>
+      {isModalVisible && (
+        <Modal
+          success={true}
+          closeModal={(e) => closeModal(e)}
+        />
+      )}
       <div className={styles.inner}>
         <ProgressBar currentStep={3} />
 
