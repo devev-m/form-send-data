@@ -45,7 +45,7 @@ export const HomeCardMain = () => {
           placeholder="+7 999 999-99-99"
           {...register('phone')}
         />
-        {errors.phone?.message}
+        <span className={styles.error}>{errors.phone?.message}</span>
       </label>
 
       <label className={styles.label}>
@@ -53,10 +53,10 @@ export const HomeCardMain = () => {
         <input
           className={styles.input}
           type="email"
-          placeholder="tim.jennings@example.com"
+          placeholder="mashkovtsevea@gmail.com"
           {...register('email')}
         />
-        {errors.email?.message}
+        <span className={styles.error}>{errors.email?.message}</span>
       </label>
 
       <button

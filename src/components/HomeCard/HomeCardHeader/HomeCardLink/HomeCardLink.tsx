@@ -1,11 +1,11 @@
 import styles from './HomeCardLink.module.scss';
 
-interface IHomeCardLink {
+interface IHomeCardLinkProps {
   href: string;
   linkName: string;
 }
 
-export const HomeCardLink = ({ href, linkName }: IHomeCardLink) => {
+export const HomeCardLink = ({ href, linkName }: IHomeCardLinkProps) => {
   return (
     <div className={styles.inner}>
       <img

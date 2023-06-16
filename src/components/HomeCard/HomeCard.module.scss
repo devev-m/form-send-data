@@ -1,15 +1,8 @@
 .inner {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-}
-
-.modal {
-   display: flex;
-   flex-direction: column;
-   flex: 1;
    max-width: 900px;
-   min-height: 700px;
+   min-height: 704px;
    background-color: #fff;
    padding: 24px;
+   margin: 0 auto;
+   border-radius: 12px 12px 0px 0px;
 }

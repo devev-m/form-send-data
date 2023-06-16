@@ -6,10 +6,8 @@ import styles from './HomeCard.module.scss';
 export const HomeCard = () => {
   return (
     <div className={styles.inner}>
-      <div className={styles.modal}>
-        <HomeCardHeader />
-        <HomeCardMain />
-      </div>
+      <HomeCardHeader />
+      <HomeCardMain />
     </div>
   );
 };

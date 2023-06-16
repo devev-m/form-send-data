@@ -5,7 +5,7 @@ import styles from './HomeCardHeader.module.scss';
 export const HomeCardHeader = () => {
   return (
     <div className={styles.header}>
-      <div className={styles.icon}>ЕМ</div>
+      <div className={styles.logo}>ЕМ</div>
       <div className={styles.info}>
         <h2 className={styles.name}>Евгений Машковцев</h2>
         <div className={styles.links}>
