@@ -10,7 +10,7 @@ import { ProgressBar } from '../ProgressBar/ProgressBar';
 
 import styles from './FirstCard.module.scss';
 
-const schema = yup.object({
+const schema = yup.object().shape({
   nickname: yup
     .string()
     .required('Введите Nickname')
@@ -29,6 +29,8 @@ const schema = yup.object({
   sex: yup.mixed<Sex>().oneOf(Object.values(Sex)).required('Выберите пол'),
 });
 
+type FormData = yup.InferType<typeof schema>;
+
 interface IFirstCardProps {
   formData: FormDataType;
   setStep: (arg: number) => void;
@@ -40,7 +42,7 @@ export const FirstCard: React.FC<IFirstCardProps> = ({ setStep, formData }) => {
     handleSubmit,
     trigger,
     formState: { errors },
-  } = useForm<FormDataType>({
+  } = useForm<FormData>({
     mode: 'onBlur',
     defaultValues: formData,
     resolver: yupResolver(schema),
@@ -48,7 +50,7 @@ export const FirstCard: React.FC<IFirstCardProps> = ({ setStep, formData }) => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const onSubmit: SubmitHandler<FormDataType> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
     dispatch(setFormData(data));
     setStep(2);
   };
