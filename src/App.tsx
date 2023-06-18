@@ -1,9 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 
 import { Home } from './pages/Home';
-import { StepOne } from './pages/StepOne';
-import { StepTwo } from './pages/StepTwo';
-import { StepThree } from './pages/StepThree';
+import { Create } from './pages/Create';
 
 function App() {
   return (
@@ -13,16 +11,8 @@ function App() {
         element={<Home />}
       />
       <Route
-        path="step-one"
-        element={<StepOne />}
-      />
-      <Route
-        path="step-two"
-        element={<StepTwo />}
-      />
-      <Route
-        path="step-three"
-        element={<StepThree />}
+        path="create"
+        element={<Create />}
       />
     </Routes>
   );

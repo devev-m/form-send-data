@@ -4,7 +4,7 @@ interface IProgressBarProps {
   currentStep: number;
 }
 
-export const ProgressBar = ({ currentStep }: IProgressBarProps) => {
+export const ProgressBar: React.FC<IProgressBarProps> = ({ currentStep }) => {
   return (
     <div className={styles.progressBar}>
       <div
@@ -69,9 +69,15 @@ export const ProgressBar = ({ currentStep }: IProgressBarProps) => {
         )}
       </div>
       <div className={styles.stepNumbers}>
-        <span className={`${currentStep >= 1 ? styles.activeSpan : ''}`}>1</span>
-        <span className={`${currentStep >= 2 ? styles.activeSpan : ''}`}>2</span>
-        <span className={`${currentStep >= 3 ? styles.activeSpan : ''}`}>3</span>
+        <span className={`${currentStep === 1 ? styles.active : styles.passed}`}>1</span>
+        <span
+          className={`${
+            currentStep === 2 ? styles.active : currentStep === 3 ? styles.passed : ''
+          }`}
+        >
+          2
+        </span>
+        <span className={`${currentStep === 3 ? styles.active : ''}`}>3</span>
       </div>
     </div>
   );

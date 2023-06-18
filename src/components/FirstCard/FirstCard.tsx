@@ -2,15 +2,13 @@ import { Link } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
+import { FormDataType, Sex, setFormData } from '../../redux/slice';
 
 import { ProgressBar } from '../ProgressBar/ProgressBar';
 
 import styles from './FirstCard.module.scss';
-
-enum Sex {
-  man = 'man',
-  woman = 'woman',
-}
 
 const schema = yup.object({
   nickname: yup
@@ -28,107 +26,141 @@ const schema = yup.object({
     .required('Введите Sername')
     .matches(/^[\p{L}]+$/u, 'Введите только буквы')
     .max(50, 'Максимальная длина поля - 50 символов'),
-  sex: yup.string().oneOf(Object.values(Sex)).required('Выберите пол'),
+  sex: yup.mixed<Sex>().oneOf(Object.values(Sex)).required('Выберите пол'),
 });
 
-interface IFormData {
-  nickname: string;
-  name: string;
-  sername: string;
-  sex: Sex;
+interface IFirstCardProps {
+  formData: FormDataType;
+  setStep: (arg: number) => void;
 }
 
-export const FirstCard = () => {
+export const FirstCard: React.FC<IFirstCardProps> = ({ setStep, formData }) => {
   const {
     register,
     handleSubmit,
+    trigger,
     formState: { errors },
-  } = useForm<IFormData>({ resolver: yupResolver(schema) });
+  } = useForm<FormDataType>({
+    mode: 'onBlur',
+    defaultValues: formData,
+    resolver: yupResolver(schema),
+  });
 
-  const onSubmit: SubmitHandler<IFormData> = (data) => console.log(data);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onSubmit: SubmitHandler<FormDataType> = (data) => {
+    dispatch(setFormData(data));
+    setStep(2);
+  };
 
   return (
     <div className={styles.inner}>
-      <div className={styles.modal}>
-        <ProgressBar currentStep={1} />
+      <ProgressBar currentStep={1} />
 
-        <div className={styles.formWrapper}>
-          <form
-            className={styles.form}
-            onSubmit={handleSubmit(onSubmit)}
+      <form
+        className={styles.form}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <label className={styles.label}>
+          Nickname
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Placeholder"
+            id="field-nickname"
+            {...register('nickname', {
+              required: true,
+            })}
+            onBlur={() => {
+              trigger('nickname');
+            }}
+          />
+          <span className={styles.error}>{errors.nickname?.message}</span>
+        </label>
+
+        <label className={styles.label}>
+          Name
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Placeholder"
+            id="field-name"
+            {...register('name', {
+              required: true,
+            })}
+            onBlur={() => {
+              trigger('name');
+            }}
+          />
+          <span className={styles.error}>{errors.name?.message}</span>
+        </label>
+
+        <label className={styles.label}>
+          Sername
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Placeholder"
+            id="field-sername"
+            {...register('sername', {
+              required: true,
+            })}
+            onBlur={() => {
+              trigger('sername');
+            }}
+          />
+          <span className={styles.error}>{errors.sername?.message}</span>
+        </label>
+
+        <label className={styles.label}>
+          Sex
+          <select
+            className={styles.input}
+            {...register('sex', {
+              required: true,
+            })}
           >
-            <label className={styles.label}>
-              Nickname
-              <input
-                className={styles.input}
-                type="text"
-                placeholder="Placeholder"
-                {...register('nickname', {
-                  required: true,
-                })}
-              />
-              {errors.nickname?.message}
-            </label>
-
-            <label className={styles.label}>
-              Name
-              <input
-                className={styles.input}
-                type="text"
-                placeholder="Placeholder"
-                {...register('name', {
-                  required: true,
-                })}
-              />
-              {errors.name?.message}
-            </label>
-
-            <label className={styles.label}>
-              Sername
-              <input
-                className={styles.input}
-                type="text"
-                placeholder="Placeholder"
-                {...register('sername', {
-                  required: true,
-                })}
-              />
-              {errors.sername?.message}
-            </label>
-
-            <label className={styles.label}>
-              Sex
-              <select
-                className={styles.input}
-                {...register('sex', { required: true })}
-              >
-                <option
-                  className={styles.input}
-                  value=""
-                >
-                  Не выбрано
-                </option>
-                <option value={Sex.man}>man</option>
-                <option value={Sex.woman}>woman</option>
-              </select>
-              {errors.sex?.message}
-            </label>
-
-            <button
-              className={styles.buttonNext}
-              type="submit"
+            <option
+              className={styles.input}
+              id="field-sex"
+              value=""
             >
-              Далее
-            </button>
-          </form>
+              Не выбрано
+            </option>
+            <option
+              className={styles.input}
+              id="field-sex-option-man"
+            >
+              man
+            </option>
+            <option
+              className={styles.input}
+              id="field-sex-option-woman"
+            >
+              woman
+            </option>
+          </select>
+          <span className={styles.error}>{errors.sex?.message}</span>
+        </label>
+
+        <div className={styles.buttons}>
           <Link
-            to="/"
             className={styles.buttonBack}
+            to="/"
+            id="button-back"
           >
             Назад
           </Link>
+
+          <button
+            className={styles.buttonNext}
+            type="submit"
+            id="button-next"
+          >
+            Далее
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

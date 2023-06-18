@@ -14,7 +14,7 @@ export const HomeCardHeader = () => {
             linkName="Telegram"
           />
           <HomeCardLink
-            href="https://github.com/devev-m"
+            href="https://github.com/devev-m/form-send-data"
             linkName="GitHub"
           />
           <HomeCardLink

@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { resetFormData } from '../../redux/slice';
 
 import styles from './Modal.module.scss';
 
@@ -7,7 +9,9 @@ interface IModalProps {
   closeModal: (e: React.MouseEvent) => void;
 }
 
-export const Modal = ({ success, closeModal }: IModalProps) => {
+export const Modal: React.FC<IModalProps> = ({ success, closeModal }) => {
+  const dispatch = useDispatch();
+
   return (
     <>
       <div className={styles.wrapper} />
@@ -23,6 +27,7 @@ export const Modal = ({ success, closeModal }: IModalProps) => {
             <Link
               className={styles.button}
               to="/"
+              onClick={() => dispatch(resetFormData())}
             >
               На главную
             </Link>
@@ -47,7 +52,12 @@ export const Modal = ({ success, closeModal }: IModalProps) => {
               src="/error-icon.svg"
               alt="error-icon"
             />
-            <button className={`${styles.button} ${styles.right}`}>Закрыть</button>
+            <button
+              className={`${styles.button} ${styles.right}`}
+              onClick={closeModal}
+            >
+              Закрыть
+            </button>
           </>
         )}
       </div>

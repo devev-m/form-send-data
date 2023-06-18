@@ -1,21 +1,25 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 
+import { AppDispatch } from '../../redux/store';
+import { FormDataType, setFormData } from '../../redux/slice';
+import { usePostFormDataMutation } from '../../redux/api';
 import { ProgressBar } from '../ProgressBar/ProgressBar';
-
-import styles from './ThirdCard.module.scss';
 import { Modal } from '../Modal/Modal';
 
-interface IFormInput {
-  about: string;
+import styles from './ThirdCard.module.scss';
+
+interface IThirdCardProps {
+  setStep: (arg: number) => void;
+  formData: FormDataType;
 }
 
-export const ThirdCard = () => {
+export const ThirdCard: React.FC<IThirdCardProps> = ({ setStep, formData }) => {
   const [text, setText] = useState('');
-  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const maxLength = 200;
+  const [postForm, { isSuccess }] = usePostFormDataMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
@@ -25,9 +29,24 @@ export const ThirdCard = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<FormDataType>({ defaultValues: formData });
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onSubmit: SubmitHandler<FormDataType> = (data) => {
+    dispatch(setFormData(data));
+    postForm(data)
+      .then(() => {
+        setIsModalVisible(true);
+      })
+      .catch(() => {
+        setIsModalVisible(true);
+      });
+  };
+
+  const handleSubmitBack = () => {
+    setStep(2);
+  };
 
   const closeModal = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -38,7 +57,7 @@ export const ThirdCard = () => {
     <div className={styles.thirdCard}>
       {isModalVisible && (
         <Modal
-          success={true}
+          success={isSuccess}
           closeModal={(e) => closeModal(e)}
         />
       )}
@@ -55,8 +74,8 @@ export const ThirdCard = () => {
               className={styles.textarea}
               placeholder="Placeholder"
               value={text}
-              {...register('about', { required: true, maxLength })}
-              onChange={(e) => handleChange(e)}
+              {...register('about', { required: true, maxLength: 200 })}
+              onChange={handleChange}
             />
             <span className={styles.counter}>{text.replace(/\s/g, '').length}</span>
           </label>
@@ -66,18 +85,23 @@ export const ThirdCard = () => {
           {errors.about?.type === 'maxLength' && (
             <p className={styles.error}>Превышено максимальное количество символов</p>
           )}
-          <button
-            className={styles.buttonNext}
-            type="submit"
-          >
-            Отправить
-          </button>
-          <Link
-            to="/step-two"
-            className={styles.buttonBack}
-          >
-            Назад
-          </Link>
+
+          <div className={styles.buttons}>
+            <button
+              onClick={handleSubmitBack}
+              type="button"
+              className={styles.buttonBack}
+            >
+              Назад
+            </button>
+
+            <button
+              className={styles.buttonNext}
+              type="submit"
+            >
+              Отправить
+            </button>
+          </div>
         </form>
       </div>
     </div>

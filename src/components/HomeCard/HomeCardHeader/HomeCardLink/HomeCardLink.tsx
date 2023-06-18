@@ -5,7 +5,7 @@ interface IHomeCardLinkProps {
   linkName: string;
 }
 
-export const HomeCardLink = ({ href, linkName }: IHomeCardLinkProps) => {
+export const HomeCardLink: React.FC<IHomeCardLinkProps> = ({ href, linkName }) => {
   return (
     <div className={styles.inner}>
       <img

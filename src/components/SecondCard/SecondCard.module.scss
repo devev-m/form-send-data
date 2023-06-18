@@ -1,17 +1,16 @@
-.secondCard {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-}
-
 .inner {
-   display: flex;
-   flex-direction: column;
-   flex: 1;
    max-width: 900px;
    min-height: 800px;
-   background-color: #fff;
+   margin: 0 auto;
    padding: 62px 110px 0px;
+   background-color: #fff;
+   border-radius: 24px;
+}
+
+@media (max-width: 767px) {
+   .inner {
+      padding: 50px 30px;
+   }
 }
 
 .formWrapper {
@@ -54,17 +53,11 @@
    }
 }
 
-
-.buttonNext {
-   font-size: 14px;
-   line-height: 20px;
-   color: #FFFFFF;
-   padding: 12px 16px;
-   background-color: #5558FA;
-   border-radius: 4px;
-   border: none;
-   margin-top: 48px;
-   align-self: flex-end;
+.buttons {
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+   padding-top: 64px;
 }
 
 .buttonBack {
@@ -76,17 +69,23 @@
    border-radius: 4px;
    background-color: #fff;
    align-self: flex-start;
-   position: absolute;
-   bottom: 0;
-   left: 0;
 
    &.buttonAdd {
-      position: static;
-      padding: 16px;
+      padding: 20px;
       margin-top: 8px;
       margin-bottom: 24px;
       background: url("/plus.svg") center no-repeat;
    }
+}
+
+.buttonNext {
+   font-size: 14px;
+   line-height: 20px;
+   color: #FFFFFF;
+   padding: 12px 16px;
+   background-color: #5558FA;
+   border-radius: 4px;
+   border: none;
 }
 
 .checkboxGroup {

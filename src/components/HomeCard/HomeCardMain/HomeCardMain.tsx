@@ -2,6 +2,11 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import InputMask from 'react-input-mask';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { FormDataType, setFormData } from '../../../redux/slice';
+import { AppDispatch, RootState } from '../../../redux/store';
 
 import styles from './HomeCardMain.module.scss';
 
@@ -17,19 +22,27 @@ const schema = yup.object({
     .matches(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, 'Неверный формат email'),
 });
 
-interface IFormData {
-  phone: string;
-  email: string;
-}
+type FormData = Pick<FormDataType, 'phone' | 'email'>;
 
 export const HomeCardMain = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormData>({ resolver: yupResolver(schema) });
+  } = useForm<FormData>({ resolver: yupResolver(schema) });
 
-  const onSubmit: SubmitHandler<IFormData> = (data) => console.log(data);
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const formData = useSelector((state: RootState) => state.formData);
+
+  const { phone, email } = formData;
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    dispatch(setFormData(data));
+    navigate('/create');
+  };
 
   return (
     <form
@@ -42,8 +55,8 @@ export const HomeCardMain = () => {
           className={styles.input}
           mask="+7 (999) 999-99-99"
           maskChar="_"
-          placeholder="+7 999 999-99-99"
           {...register('phone')}
+          defaultValue={phone}
         />
         <span className={styles.error}>{errors.phone?.message}</span>
       </label>
@@ -53,8 +66,8 @@ export const HomeCardMain = () => {
         <input
           className={styles.input}
           type="email"
-          placeholder="mashkovtsevea@gmail.com"
           {...register('email')}
+          defaultValue={email}
         />
         <span className={styles.error}>{errors.email?.message}</span>
       </label>
@@ -62,6 +75,7 @@ export const HomeCardMain = () => {
       <button
         className={styles.button}
         type="submit"
+        id="button-start"
       >
         Начать
       </button>

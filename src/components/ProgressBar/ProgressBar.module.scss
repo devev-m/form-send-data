@@ -1,12 +1,10 @@
 .progress {
-   width: 100%;
-   height: 8px;
-   background-color: rgba(0, 0, 0, 0.08);
-   border-radius: 8px;
-   padding: 4px 0;
    display: flex;
    justify-content: space-between;
    align-items: center;
+   height: 8px;
+   background-color: rgba(0, 0, 0, 0.08);
+   border-radius: 8px;
 
    &.half {
       background: linear-gradient(to right, #5558FA 50%, rgba(0, 0, 0, 0.08) 50%);
@@ -15,26 +13,30 @@
    &.full {
       background-color: #5558FA;
    }
+
+   .image {
+      width: 16px;
+      height: 16px;
+   }
 }
 
-.image {
-   width: 16px;
-   height: 16px;
-}
 
 .stepNumbers {
    display: flex;
    justify-content: space-between;
-   margin-top: 16px;
-   padding-bottom: 43px;
+   padding-top: 16px;
 
    span {
       font-size: 14px;
       line-height: 20px;
       color: #666666;
 
-      &.activeSpan {
+      &.active {
          font-weight: 600;
+         color: #5558FA;
+      }
+
+      &.passed {
          color: #5558FA;
       }
    }

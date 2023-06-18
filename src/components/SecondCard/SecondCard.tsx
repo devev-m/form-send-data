@@ -1,26 +1,38 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useDispatch } from 'react-redux';
 
+import { AppDispatch } from '../../redux/store';
+import { FormDataType, setFormData } from '../../redux/slice';
 import { ProgressBar } from '../ProgressBar/ProgressBar';
 
 import styles from './SecondCard.module.scss';
 
-const schema = yup.object().shape({
+const schema = yup.object({
   advantages: yup
     .array()
     .of(yup.string().required('Введите значение в поле ввода'))
     .required('Введите хотя бы одно значение в поле ввода'),
-  checkbox: yup.array().of(yup.number()).required('Выберите хотя бы один пункт из чекбокса'),
+  checkbox: yup
+    .array()
+    .of(yup.number().required('Выберите хотя бы один пункт из чекбокса'))
+    .required('Выберите хотя бы один пункт из чекбокса'),
   radio: yup.number().required('Выберите значение для радио'),
 });
 
 type FormData = yup.InferType<typeof schema>;
 
-export const SecondCard = () => {
-  const [inputs, setInputs] = useState(['']);
+interface ISecondCardProps {
+  setStep: (arg: number) => void;
+  formData: FormDataType;
+}
+
+export const SecondCard: React.FC<ISecondCardProps> = ({ setStep, formData }) => {
+  const [inputs, setInputs] = useState(['', '', '']);
+  const checkboxes = [1, 2, 3];
+  const radioArray = [1, 2, 3];
 
   const handleInputChange = (index: number, value: string) => {
     const newInputs = [...inputs];
@@ -33,145 +45,122 @@ export const SecondCard = () => {
   };
 
   const handleRemoveInput = (index: number) => {
-    const newInputs = [...inputs];
-    newInputs.splice(index, 1);
-    setInputs(newInputs);
+    setInputs((prevInputs) => prevInputs.filter((_, i) => i !== index));
   };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({ resolver: yupResolver(schema) });
+    getValues,
+  } = useForm<FormData>({ resolver: yupResolver(schema), defaultValues: formData });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    dispatch(setFormData(data));
+    setStep(3);
+  };
+
+  const handleSubmitBack = () => {
+    setStep(1);
+    dispatch(setFormData(getValues()));
+  };
 
   return (
-    <div className={styles.secondCard}>
-      <div className={styles.inner}>
-        <ProgressBar currentStep={2} />
+    <div className={styles.inner}>
+      <ProgressBar currentStep={2} />
 
-        <div className={styles.formWrapper}>
-          <form
-            className={styles.form}
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            Advantages
-            <div className={styles.advantages}>
-              {inputs.map((value, index) => (
-                <div
-                  className={styles.advantage}
-                  key={index}
+      <div className={styles.formWrapper}>
+        <form
+          className={styles.form}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          Advantages
+          <div className={styles.advantages}>
+            {inputs.map((value, index) => (
+              <div
+                className={styles.advantage}
+                key={index}
+              >
+                <input
+                  className={styles.input}
+                  type="text"
+                  placeholder="Placeholder"
+                  {...register(`advantages.${index}`, {
+                    required: true,
+                  })}
+                  value={value}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                />
+                <button
+                  className={styles.buttonDelete}
+                  onClick={() => handleRemoveInput(index)}
                 >
-                  <input
-                    className={styles.input}
-                    type="text"
-                    placeholder="Placeholder"
-                    {...register(`advantages.${index}`, {
-                      required: true,
-                    })}
-                    value={value}
-                    onChange={(e) => handleInputChange(index, e.target.value)}
+                  <img
+                    src="/delete.svg"
+                    alt="delete-icon"
                   />
-                  <button
-                    className={styles.buttonDelete}
-                    onClick={() => handleRemoveInput(index)}
-                  >
-                    <img
-                      src="/delete.svg"
-                      alt="delete-icon"
-                    />
-                  </button>
-                </div>
-              ))}
-              {errors.advantages?.message}
-            </div>
+                </button>
+              </div>
+            ))}
+            {errors.advantages?.message}
+          </div>
+          <button
+            className={`${styles.buttonBack} ${styles.buttonAdd}`}
+            onClick={handleAddInput}
+          />
+          <div className={styles.checkboxGroup}>
+            Checkbox group
+            {checkboxes.map((elem, index) => (
+              <label key={index}>
+                <input
+                  type="checkbox"
+                  value={elem}
+                  {...register('checkbox', {
+                    required: true,
+                  })}
+                />
+                <span className={styles.checkboxImage}></span>
+                {elem}
+              </label>
+            ))}
+            {errors.checkbox?.message}
+          </div>
+          <div className={styles.radioGroup}>
+            Radio group
+            {radioArray.map((elem, index) => (
+              <label key={index}>
+                <input
+                  type="radio"
+                  value={elem}
+                  {...register('radio', {
+                    required: true,
+                  })}
+                />
+                <span className={styles.radioImage}></span>
+                {elem}
+              </label>
+            ))}
+            {errors.radio?.message}
+          </div>
+          <div className={styles.buttons}>
             <button
-              className={`${styles.buttonBack} ${styles.buttonAdd}`}
-              onClick={handleAddInput}
-            />
-            <div className={styles.checkboxGroup}>
-              Checkbox group
-              <label>
-                <input
-                  type="checkbox"
-                  value={1}
-                  {...register('checkbox', {
-                    required: true,
-                  })}
-                />
-                <span className={styles.checkboxImage}></span>1
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  value={2}
-                  {...register('checkbox', {
-                    required: true,
-                  })}
-                />
-                <span className={styles.checkboxImage}></span>2
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  value={3}
-                  {...register('checkbox', {
-                    required: true,
-                  })}
-                />
-                <span className={styles.checkboxImage}></span>3
-              </label>
-              {errors.checkbox?.message}
-            </div>
-            <div className={styles.radioGroup}>
-              Radio group
-              <label>
-                <input
-                  type="radio"
-                  value={1}
-                  {...register('radio', {
-                    required: true,
-                  })}
-                />
-                <span className={styles.radioImage}></span>1
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value={2}
-                  {...register('radio', {
-                    required: true,
-                  })}
-                />
-                <span className={styles.radioImage}></span>2
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value={3}
-                  {...register('radio', {
-                    required: true,
-                  })}
-                />
-                <span className={styles.radioImage}></span>3
-              </label>
-              {errors.radio?.message}
-            </div>
+              onClick={handleSubmitBack}
+              className={styles.buttonBack}
+              type="button"
+            >
+              Back
+            </button>
+
             <button
               className={styles.buttonNext}
               type="submit"
             >
               Далее
             </button>
-          </form>
-          <Link
-            to="/step-one"
-            className={styles.buttonBack}
-          >
-            Back
-          </Link>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   );
